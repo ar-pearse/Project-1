@@ -15,9 +15,9 @@ public class ConnectionUtil {
 	}
 	
 	private static ConnectionUtil instance;
-	private String url = System.getenv("url");
-	private String username = System.getenv("username");
-	private String password = System.getenv("password");
+	private String url = "jdbc:postgresql://cardealershipdb.cebtidajd26p.us-east-2.rds.amazonaws.com:5432/postgres?currentSchema=project1";
+	private String username = "amateur_photoshop";
+	private String password = "bungus";
 	
 	private ConnectionUtil() {}
 	
