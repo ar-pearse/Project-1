@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserDao.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AmatuerPhotoshop</a> &gt; <a href="index.source.html" class="el_package">com.photoshop.repo</a> &gt; <span class="el_source">UserDao.java</span></div><h1>UserDao.java</h1><pre class="source lang-java linenums">package com.photoshop.repo;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
+//import org.apache.log4j.Logger;
+
+import com.photoshop.model.User;
+import com.photoshop.model.UserRole;
+import com.photoshop.util.ConnectionUtil;
+
+<span class="fc" id="L20">public class UserDao implements DaoContract&lt;User, Integer&gt; {</span>
+
+<span class="fc" id="L22">	private static Logger logger = Logger.getLogger(UserDao.class);</span>
+	
+	@Override
+	public List&lt;User&gt; findAll() {
+<span class="fc" id="L26">		List&lt;User&gt; users = new LinkedList&lt;&gt;();</span>
+<span class="fc" id="L27">		String sql = &quot;select * from get_all_employees&quot;;</span>
+		
+<span class="fc" id="L29">		try (Connection conn = ConnectionUtil.getInstance().getConnection() ){</span>
+<span class="fc" id="L30">			PreparedStatement ps = conn.prepareStatement(sql);</span>
+<span class="fc" id="L31">			ResultSet rs = ps.executeQuery();</span>
+			
+<span class="fc bfc" id="L33" title="All 2 branches covered.">			while(rs.next()) {</span>
+<span class="fc" id="L34">				users.add(new User(rs.getInt(&quot;id&quot;), rs.getString(&quot;username&quot;), null, rs.getString(&quot;first_name&quot;), </span>
+<span class="fc" id="L35">										rs.getString(&quot;last_name&quot;), rs.getString(&quot;email&quot;), new UserRole(rs.getInt(&quot;role_id&quot;), rs.getString(&quot;role&quot;))));</span>
+			}
+			
+<span class="fc" id="L38">			logger.info(&quot;Found all users: &quot; + users);</span>
+<span class="fc" id="L39">			ps.close();</span>
+<span class="fc" id="L40">			rs.close();</span>
+<span class="nc" id="L41">		} catch (SQLException e) {</span>
+<span class="nc" id="L42">			logger.warn(&quot;Error finding users: &quot;, e);</span>
+<span class="fc" id="L43">		}</span>
+		
+<span class="fc" id="L45">		return users;</span>
+	}
+
+	@Override
+	public User findById(Integer i) {
+<span class="fc" id="L50">		User user = null;</span>
+<span class="fc" id="L51">		String sql = &quot;select * from get_all_employees where id = ?&quot;;</span>
+		
+<span class="fc" id="L53">		try (Connection conn = ConnectionUtil.getInstance().getConnection()) {</span>
+<span class="fc" id="L54">			PreparedStatement ps = conn.prepareStatement(sql);</span>
+<span class="fc" id="L55">			ps.setInt(1, i);</span>
+<span class="fc" id="L56">			ResultSet rs = ps.executeQuery();</span>
+			
+<span class="fc bfc" id="L58" title="All 2 branches covered.">			while(rs.next()) {</span>
+<span class="fc" id="L59">				user = new User(rs.getInt(&quot;id&quot;), rs.getString(&quot;username&quot;), rs.getString(&quot;password&quot;), rs.getString(&quot;first_name&quot;), </span>
+<span class="fc" id="L60">									rs.getString(&quot;last_name&quot;), rs.getString(&quot;email&quot;), new UserRole(rs.getInt(&quot;role_id&quot;), rs.getString(&quot;role&quot;)));</span>
+			}
+			
+<span class="fc" id="L63">			logger.info(&quot;Found user by id: &quot; + user);</span>
+			
+<span class="fc" id="L65">			ps.close();</span>
+<span class="fc" id="L66">			rs.close();</span>
+<span class="nc" id="L67">		} catch (SQLException e) {</span>
+<span class="nc" id="L68">			logger.warn(&quot;Error finding user by id: &quot;, e);</span>
+<span class="fc" id="L69">		}</span>
+		
+<span class="fc" id="L71">		return user;</span>
+	}
+
+	@Override
+	public int create(User t) {
+<span class="fc" id="L76">		String sql = &quot;insert into ers_users (ers_username, ers_password, user_first_name, &quot;</span>
+											+ &quot;user_last_name, user_email, user_role_id) values (?,?,?,?,?,?)&quot;; 
+<span class="fc" id="L78">		int updated = 0;</span>
+<span class="fc" id="L79">		try (Connection conn = ConnectionUtil.getInstance().getConnection()){</span>
+<span class="fc" id="L80">			PreparedStatement ps = conn.prepareStatement(sql);</span>
+<span class="fc" id="L81">			ps.setString(1, t.getUsername());</span>
+<span class="fc" id="L82">			ps.setString(2, t.getPassword());</span>
+<span class="fc" id="L83">			ps.setString(3, t.getFirstName());</span>
+<span class="fc" id="L84">			ps.setString(4, t.getLastName());</span>
+<span class="fc" id="L85">			ps.setString(5, t.getEmail());</span>
+<span class="fc" id="L86">			ps.setInt(6, t.getUserRole().getId());</span>
+			
+<span class="nc" id="L88">			updated = ps.executeUpdate();</span>
+			
+<span class="nc" id="L90">			logger.info(&quot;User created: &quot; + t);</span>
+			
+<span class="nc" id="L92">			ps.close();</span>
+<span class="fc" id="L93">		} catch (SQLException e) {</span>
+<span class="fc" id="L94">			logger.warn(&quot;Error creating user: &quot;, e);</span>
+<span class="nc" id="L95">		}</span>
+		
+<span class="fc" id="L97">		return updated;</span>
+	}
+
+	@Override
+	public int update(User t) {
+<span class="fc" id="L102">		String sql = &quot;update ers_users set ers_username = ?,&quot;</span>
+										+ &quot;ers_password = ?,&quot;
+										+ &quot;user_first_name = ?,&quot;
+										+ &quot;user_last_name = ?,&quot;
+										+ &quot;user_email = ?,&quot;
+										+ &quot;user_role_id = ? &quot;
+									 + &quot;where ers_users_id = ?&quot;;
+<span class="fc" id="L109">		int updated = 0;</span>
+<span class="fc" id="L110">		try (Connection conn = ConnectionUtil.getInstance().getConnection()){</span>
+<span class="fc" id="L111">			PreparedStatement ps = conn.prepareStatement(sql);</span>
+<span class="fc" id="L112">			ps.setString(1, t.getUsername());</span>
+<span class="fc" id="L113">			ps.setString(2, t.getPassword());</span>
+<span class="fc" id="L114">			ps.setString(3, t.getFirstName());</span>
+<span class="fc" id="L115">			ps.setString(4, t.getLastName());</span>
+<span class="fc" id="L116">			ps.setString(5, t.getEmail());</span>
+<span class="fc" id="L117">			ps.setInt(6, t.getUserRole().getId());</span>
+<span class="fc" id="L118">			ps.setInt(7, t.getId());</span>
+			
+<span class="fc" id="L120">			updated = ps.executeUpdate();</span>
+			
+<span class="fc" id="L122">			logger.info(&quot;User updated: &quot; + t);</span>
+			
+<span class="fc" id="L124">			ps.close();</span>
+<span class="nc" id="L125">		} catch (SQLException e) {</span>
+<span class="nc" id="L126">			logger.warn(&quot;Error updating user: &quot;, e);</span>
+<span class="fc" id="L127">		}</span>
+
+<span class="fc" id="L129">		return updated;</span>
+	}
+
+	public boolean verifyUser(String email, String password) {
+		
+<span class="fc" id="L134">		String sql = &quot;{ ? = call verifyUser(?,?) }&quot;;</span>
+		
+<span class="fc" id="L136">		try (Connection conn = ConnectionUtil.getInstance().getConnection()){</span>
+<span class="fc" id="L137">			CallableStatement ps = conn.prepareCall(sql);</span>
+<span class="fc" id="L138">			ps.registerOutParameter(1, Types.BOOLEAN);</span>
+<span class="fc" id="L139">			ps.setString(2, email);</span>
+<span class="fc" id="L140">			ps.setString(3, password);</span>
+			
+<span class="fc" id="L142">			ps.execute();</span>
+<span class="fc" id="L143">			boolean verified = ps.getBoolean(1);</span>
+<span class="fc" id="L144">			ps.close();</span>
+			
+<span class="fc" id="L146">			logger.info(&quot;Verified user info: &quot; + email + &quot; &quot; + password);</span>
+<span class="fc" id="L147">			return verified;</span>
+			
+<span class="nc" id="L149">		} catch (SQLException e) {</span>
+<span class="nc" id="L150">			logger.warn(&quot;Error verifying user: &quot;, e);</span>
+		}
+		
+<span class="nc" id="L153">		logger.info(&quot;Invalid credentials: &quot; + email + &quot; &quot; + password);</span>
+<span class="nc" id="L154">		return false;</span>
+	}
+	
+	public User findByEmail(String email) {
+<span class="fc" id="L158">		User user = null;</span>
+<span class="fc" id="L159">		String sql = &quot;select * from get_all_employees where email = ?&quot;;</span>
+		
+<span class="fc" id="L161">		try (Connection conn = ConnectionUtil.getInstance().getConnection()){</span>
+<span class="fc" id="L162">			PreparedStatement ps = conn.prepareStatement(sql);</span>
+<span class="fc" id="L163">			ps.setString(1, email);</span>
+<span class="fc" id="L164">			ResultSet rs = ps.executeQuery();</span>
+			
+<span class="fc bfc" id="L166" title="All 2 branches covered.">			while(rs.next()) {</span>
+<span class="fc" id="L167">				user = new User(rs.getInt(&quot;id&quot;), rs.getString(&quot;username&quot;), rs.getString(&quot;password&quot;), rs.getString(&quot;first_name&quot;), </span>
+<span class="fc" id="L168">						rs.getString(&quot;last_name&quot;), rs.getString(&quot;email&quot;), new UserRole(rs.getInt(&quot;role_id&quot;), rs.getString(&quot;role&quot;)));</span>
+			}
+			
+<span class="nc" id="L171">		} catch (SQLException e) {</span>
+<span class="nc" id="L172">			logger.warn(&quot;Error finding user email: &quot;, e);</span>
+<span class="fc" id="L173">		}</span>
+		
+<span class="fc" id="L175">		logger.info(&quot;Found user by email: &quot; + user);</span>
+<span class="fc" id="L176">		return user;</span>
+	}
+
+	@Override
+	public int delete(Integer i) {
+		// TODO Auto-generated method stub
+<span class="nc" id="L182">		return 0;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

@@ -1,0 +1,17 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+AmatuerPhotoshop,com.photoshop.servlet,DataServlet,17,0,0,0,5,0,3,0,3,0
+AmatuerPhotoshop,com.photoshop.servlet,RequestForwarder,108,0,15,0,31,0,17,0,4,0
+AmatuerPhotoshop,com.photoshop.servlet,ViewServlet,25,0,0,0,7,0,3,0,3,0
+AmatuerPhotoshop,com.photoshop.service,ReimbursementService,12,66,1,1,2,11,3,10,2,10
+AmatuerPhotoshop,com.photoshop.service,UserService,5,38,0,0,1,10,1,7,1,7
+AmatuerPhotoshop,com.photoshop.util,ConnectionUtil,3,32,0,2,2,10,0,4,0,3
+AmatuerPhotoshop,com.photoshop.util,SessionController,4,17,0,0,2,5,1,3,1,3
+AmatuerPhotoshop,com.photoshop.repo,ReimbursementDao,113,346,2,8,38,65,3,11,2,7
+AmatuerPhotoshop,com.photoshop.repo,UserDao,59,386,0,6,17,81,1,11,1,8
+AmatuerPhotoshop,com.photoshop.model,UserRole,8,32,0,0,4,7,2,4,2,4
+AmatuerPhotoshop,com.photoshop.model,ReimbursementStatus,25,15,0,0,5,6,3,3,3,3
+AmatuerPhotoshop,com.photoshop.model,Reimbursement,104,73,0,2,19,26,10,13,10,12
+AmatuerPhotoshop,com.photoshop.model,ReimbursementType,25,15,0,0,5,6,3,3,3,3
+AmatuerPhotoshop,com.photoshop.model,User,28,87,0,0,14,17,7,9,7,9
+AmatuerPhotoshop,com.photoshop.controller,ReimbursementController,214,61,2,0,57,17,6,4,5,4
+AmatuerPhotoshop,com.photoshop.controller,UserController,31,59,0,4,7,16,2,5,2,3
