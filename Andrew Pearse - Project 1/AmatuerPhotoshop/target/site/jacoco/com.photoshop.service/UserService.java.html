@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AmatuerPhotoshop</a> &gt; <a href="index.source.html" class="el_package">com.photoshop.service</a> &gt; <span class="el_source">UserService.java</span></div><h1>UserService.java</h1><pre class="source lang-java linenums">package com.photoshop.service;
+
+import java.util.List;
+
+import com.photoshop.model.User;
+import com.photoshop.repo.UserDao;
+
+public class UserService {
+	
+	private UserDao ud;
+	
+	public UserService() {
+<span class="fc" id="L13">		this(new UserDao());</span>
+<span class="fc" id="L14">	}</span>
+	
+<span class="fc" id="L16">	public UserService(UserDao ud) {</span>
+<span class="fc" id="L17">		this.ud = ud;</span>
+<span class="fc" id="L18">	}</span>
+	
+	public boolean verifyUser(String email, String password) {
+<span class="fc" id="L21">		return ud.verifyUser(email, password);</span>
+	}
+	
+	public List&lt;User&gt; findAll(){
+<span class="fc" id="L25">		return ud.findAll();</span>
+	}
+	
+	public User findById(int i) {
+<span class="fc" id="L29">		return ud.findById(i);</span>
+	}
+	
+	public int register(User user) {
+<span class="nc" id="L33">		return ud.create(user);</span>
+	}
+	
+	public User findByEmail(String username) {
+<span class="fc" id="L37">		return ud.findByEmail(username);</span>
+	}
+	
+	public int updateUserInformation(User user) {
+<span class="fc" id="L41">		return ud.update(user);</span>
+	}
+	
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>
