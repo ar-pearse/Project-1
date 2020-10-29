@@ -8,6 +8,8 @@ import java.sql.Timestamp;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.photoshop.model.Reimbursement;
 import com.photoshop.model.ReimbursementStatus;
 import com.photoshop.model.ReimbursementType;
@@ -16,6 +18,7 @@ import com.photoshop.util.ConnectionUtil;
 public class ReimbursementDao implements DaoContract<Reimbursement, Integer> {
 
 	private UserDao ud;
+	private static Logger logger = Logger.getLogger(ReimbursementDao.class);
 	
 	public ReimbursementDao() {
 		this(new UserDao());
@@ -41,8 +44,10 @@ public class ReimbursementDao implements DaoContract<Reimbursement, Integer> {
 										new ReimbursementType(rs.getInt("type_id"), rs.getString("type"))));
 			}
 			
+			logger.info("Found all reimbursements");
+			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.warn("Error finding reimbursements: ", e);
 		}
 		
 		return reimbursements;
@@ -65,10 +70,12 @@ public class ReimbursementDao implements DaoContract<Reimbursement, Integer> {
 									new ReimbursementType(rs.getInt("type_id"), rs.getString("type")));
 			}
 			
+			logger.info("Found reimbursement with id: " + i);
+			
 			ps.close();
 			rs.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.warn("Error finding reimbursement by id: ", e);
 		}
 		
 		return reimbursement;
@@ -96,9 +103,11 @@ public class ReimbursementDao implements DaoContract<Reimbursement, Integer> {
 			
 			updated = ps.executeUpdate();
 			
+			logger.info("Created reimbursement: " + t);
+			
 			ps.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.warn("Error creating reimbursement: ", e);
 		}
 		
 		return updated;
@@ -135,9 +144,11 @@ public class ReimbursementDao implements DaoContract<Reimbursement, Integer> {
 			
 			updated = ps.executeUpdate();
 		
+			logger.info("Updated reimbursement information: " + t);
+			
 			ps.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.warn("Error updating reimbursement: ", e);
 		}
 		
 		return updated;
@@ -159,9 +170,12 @@ public class ReimbursementDao implements DaoContract<Reimbursement, Integer> {
 										new ReimbursementType(rs.getInt("type_id"), rs.getString("type"))));
 			}
 			
+			logger.info("Found all reimbursements by user id: " + i);
 			
+			ps.close();
+			rs.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.warn("Error finding reimbursements by user: ", e);
 		}
 		
 		reimbursements.sort( (r1, r2) -> r1.getStatus().getStatus().compareTo(r2.getStatus().getStatus()) );
@@ -179,11 +193,13 @@ public class ReimbursementDao implements DaoContract<Reimbursement, Integer> {
 			ps.setInt(1, i);
 			
 			updated = ps.executeUpdate();
+			logger.info("Deleted reimbursement with id: " + i);
 			
 			ps.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.warn("Error deleting reimbursement: ", e);
 		}
+		
 		
 		return updated;
 	}

@@ -7,6 +7,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.photoshop.model.Reimbursement;
@@ -16,8 +18,10 @@ import com.photoshop.util.SessionController;
 
 public class ReimbursementController {
 
-	ReimbursementService rs;
-	SessionController sc;
+	private ReimbursementService rs;
+	private SessionController sc;
+	
+	private static Logger logger = Logger.getLogger(ReimbursementController.class);
 	
 	public ReimbursementController(ReimbursementService rs, SessionController sc) {
 		super();
@@ -35,8 +39,9 @@ public class ReimbursementController {
 		
 		try {
 			res.getWriter().println(new ObjectMapper().writeValueAsString(reimbursements));
+			logger.info("Successfully loaded all pending reimbursements");
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.warn("Problem loading all pending reimbursements: ", e);
 			return false;
 		}
 		
@@ -50,8 +55,9 @@ public class ReimbursementController {
 		
 		try {
 			res.getWriter().println(new ObjectMapper().writeValueAsString(reimbursements));
+			logger.info("Successfully loaded current users reimbursement requests");
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.warn("Could not load current users reimbursement requests: ", e);
 			return false;
 		}
 		
@@ -66,8 +72,9 @@ public class ReimbursementController {
 			reimb.setAuthor(sc.getSessionUser(req));
 
 			rs.request(reimb);
+			logger.info("Sent reimbursement request to be created");
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.warn("Problem sending reimbursement request", e);
 			return false;
 		}
 		
@@ -77,9 +84,12 @@ public class ReimbursementController {
 	public int cancelReimbursement(HttpServletRequest req) {
 		try {
 			JsonNode jNode = new ObjectMapper().readTree(req.getInputStream());
-			return rs.delete(jNode.get("cid").asInt());
+			int num = rs.delete(jNode.get("cid").asInt());
+			logger.info("Sent reimbursement to cancel");
+			
+			return num;
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.warn("Problem sending cancel request: ", e);
 		}
 		
 		return -1;
@@ -95,8 +105,9 @@ public class ReimbursementController {
 			reimb.setStatus(new ReimbursementStatus(3, null));
 			
 			rs.updateRequest(reimb);
+			logger.info("Sent request to be rejected");
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.warn("Problem sending update request: ", e);
 			return false;
 		}
 		
@@ -113,8 +124,9 @@ public class ReimbursementController {
 			reimb.setStatus(new ReimbursementStatus(2, null));
 			
 			rs.updateRequest(reimb);
+			logger.info("Sent request to be accepted");
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.warn("Problem sending update request: ", e);
 			return false;
 		}
 		
@@ -135,8 +147,9 @@ public class ReimbursementController {
 			}
 			
 			res.getWriter().println(new ObjectMapper().writeValueAsString(reimbursements));
+			logger.info("Sorted reimbursements by employee id: " + jNode.get("uid").asInt());
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.warn("Problem sorting reimbursements by specific user: ", e);
 			return false;
 		}
 		
