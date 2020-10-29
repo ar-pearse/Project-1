@@ -1,0 +1,80 @@
+[
+    {
+        "id": 1,
+        "amount": 300.0,
+        "dateSubmitted": "Tuesday",
+        "dateResolved": "Tuesday",
+        "description": "Wouldn't you like to know weather boy?",
+        "author": {
+            "id": 12,
+            "username": "arpearse",
+            "password": "",
+            "firstName": "Andrew",
+            "lastName": "Pearse",
+            "email": "andrew.roy.pearse@gmail.com",
+            "role": {
+                "id": 1,
+                "role": "Employee"
+            }
+        },
+        "resolver": {
+            "id": 13,
+            "username": "jlawn",
+            "password": "",
+            "firstName": "John",
+            "lastName": "Lawn",
+            "email": "jlawn@gmail.com",
+            "role": {
+                "id": 2,
+                "role": "Finance Manager"
+            }
+        },
+        "status": {
+            "id": 1,
+            "status": "REJECTED"
+        },
+        "type": {
+            "id": 4,
+            "type": "PHOTOSHOP"
+        }
+    },
+    {
+        "id": 2,
+        "amount": 150.0,
+        "dateSubmitted": "Monday",
+        "dateResolved": "",
+        "description": "Big Money",
+        "author": {
+            "id": 12,
+            "username": "arpearse",
+            "password": "",
+            "firstName": "Andrew",
+            "lastName": "Pearse",
+            "email": "andrew.roy.pearse@gmail.com",
+            "role": {
+                "id": 1,
+                "role": "Employee"
+            }
+        },
+        "resolver": {
+            "id": 13,
+            "username": "jlawn",
+            "password": "",
+            "firstName": "John",
+            "lastName": "Lawn",
+            "email": "jlawn@gmail.com",
+            "role": {
+                "id": 2,
+                "role": "Finance Manager"
+            }
+        },
+        "status": {
+            "id": 1,
+            "status": "PENDING"
+        },
+        "type": {
+            "id": 1,
+            "type": "TRAVEL"
+        }
+    }
+]

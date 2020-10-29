@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Reimbursement.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AmatuerPhotoshop</a> &gt; <a href="index.source.html" class="el_package">com.photoshop.model</a> &gt; <span class="el_source">Reimbursement.java</span></div><h1>Reimbursement.java</h1><pre class="source lang-java linenums">package com.photoshop.model;
+
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
+public class Reimbursement {
+
+	private int id;
+	private float amount;
+	private LocalDateTime dateSubmitted;
+	private LocalDateTime dateResolved;
+	private String description;
+	private User author;
+	private User resolver;
+	private ReimbursementStatus status;
+	private ReimbursementType type;
+
+<span class="nc" id="L18">	public Reimbursement() {</span>
+<span class="nc" id="L19">	}</span>
+	
+	public Reimbursement(float amount, String description, int typeId) {
+<span class="nc" id="L22">		this(0, amount, Timestamp.valueOf(LocalDateTime.now()), </span>
+				null, description, null, null, 
+				new ReimbursementStatus(1, null), 
+				new ReimbursementType(typeId, null));
+<span class="nc" id="L26">	}</span>
+	
+	public Reimbursement(int id, float amount, Timestamp dateSubmitted, Timestamp dateResolved, String description,
+			User author, User resolver, ReimbursementStatus status, ReimbursementType type) {
+<span class="fc" id="L30">		super();</span>
+<span class="fc" id="L31">		this.id = id;</span>
+<span class="fc" id="L32">		this.amount = amount;</span>
+<span class="fc" id="L33">		this.dateSubmitted = dateSubmitted.toLocalDateTime();</span>
+		
+<span class="fc bfc" id="L35" title="All 2 branches covered.">		if (dateResolved == null)</span>
+<span class="fc" id="L36">			this.dateResolved = null;</span>
+		else
+<span class="fc" id="L38">			this.dateResolved = dateResolved.toLocalDateTime();</span>
+		
+<span class="fc" id="L40">		this.description = description;</span>
+<span class="fc" id="L41">		this.author = author;</span>
+<span class="fc" id="L42">		this.resolver = resolver;</span>
+<span class="fc" id="L43">		this.status = status;</span>
+<span class="fc" id="L44">		this.type = type;</span>
+<span class="fc" id="L45">	}</span>
+
+	public int getId() {
+<span class="fc" id="L48">		return id;</span>
+	}
+
+	public void setId(int id) {
+<span class="fc" id="L52">		this.id = id;</span>
+<span class="fc" id="L53">	}</span>
+
+	public float getAmount() {
+<span class="fc" id="L56">		return amount;</span>
+	}
+
+	public void setAmount(float amount) {
+<span class="nc" id="L60">		this.amount = amount;</span>
+<span class="nc" id="L61">	}</span>
+
+	public LocalDateTime getDateSubmitted() {
+<span class="fc" id="L64">		return dateSubmitted;</span>
+	}
+
+	public void setDateSubmitted(LocalDateTime dateSubmitted) {
+<span class="nc" id="L68">		this.dateSubmitted = dateSubmitted;</span>
+<span class="nc" id="L69">	}</span>
+
+	public LocalDateTime getDateResolved() {
+<span class="fc" id="L72">		return dateResolved;</span>
+	}
+
+	public void setDateResolved(LocalDateTime dateResolved) {
+<span class="nc" id="L76">		this.dateResolved = dateResolved;</span>
+<span class="nc" id="L77">	}</span>
+
+	public String getDescription() {
+<span class="fc" id="L80">		return description;</span>
+	}
+
+	public void setDescription(String description) {
+<span class="nc" id="L84">		this.description = description;</span>
+<span class="nc" id="L85">	}</span>
+
+	public User getAuthor() {
+<span class="fc" id="L88">		return author;</span>
+	}
+
+	public void setAuthor(User author) {
+<span class="nc" id="L92">		this.author = author;</span>
+<span class="nc" id="L93">	}</span>
+
+	public User getResolver() {
+<span class="fc" id="L96">		return resolver;</span>
+	}
+
+	public void setResolver(User resolver) {
+<span class="fc" id="L100">		this.resolver = resolver;</span>
+<span class="fc" id="L101">	}</span>
+
+	public ReimbursementStatus getStatus() {
+<span class="fc" id="L104">		return status;</span>
+	}
+
+	public void setStatus(ReimbursementStatus status) {
+<span class="nc" id="L108">		this.status = status;</span>
+<span class="nc" id="L109">	}</span>
+
+	public ReimbursementType getType() {
+<span class="fc" id="L112">		return type;</span>
+	}
+
+	public void setType(ReimbursementType type) {
+<span class="nc" id="L116">		this.type = type;</span>
+<span class="nc" id="L117">	}</span>
+
+	@Override
+	public String toString() {
+<span class="fc" id="L121">		return &quot;Reimbursement [id=&quot; + id + &quot;, amount=&quot; + amount + &quot;, dateSubmitted=&quot; + dateSubmitted + &quot;, dateResolved=&quot;</span>
+				+ dateResolved + &quot;, description=&quot; + description + &quot;, author=&quot; + author
+				+ &quot;, resolver=&quot; + resolver + &quot;, status=&quot; + status + &quot;, type=&quot; + type + &quot;]&quot;;
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

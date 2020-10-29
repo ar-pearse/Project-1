@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReimbursementService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AmatuerPhotoshop</a> &gt; <a href="index.source.html" class="el_package">com.photoshop.service</a> &gt; <span class="el_source">ReimbursementService.java</span></div><h1>ReimbursementService.java</h1><pre class="source lang-java linenums">package com.photoshop.service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import com.photoshop.model.Reimbursement;
+import com.photoshop.repo.ReimbursementDao;
+
+public class ReimbursementService {
+
+	ReimbursementDao rd;
+	
+	public ReimbursementService() {
+<span class="fc" id="L14">		this (new ReimbursementDao());</span>
+<span class="fc" id="L15">	}</span>
+	
+<span class="fc" id="L17">	public ReimbursementService(ReimbursementDao rd) {</span>
+<span class="fc" id="L18">		this.rd = rd;</span>
+<span class="fc" id="L19">	}</span>
+	
+	public List&lt;Reimbursement&gt; findAll(){
+<span class="fc" id="L22">		return rd.findAll();</span>
+	}
+	
+	public List&lt;Reimbursement&gt; findAllPending() {
+<span class="fc" id="L26">		return rd.findAll().stream().filter(r -&gt; r.getStatus().getStatus().equals(&quot;PENDING&quot;)).collect(Collectors.toList());</span>
+	}
+	
+	public List&lt;Reimbursement&gt; sortByEmployee(int id){
+<span class="pc bpc" id="L30" title="1 of 2 branches missed.">		return findAllPending().stream().filter(r -&gt; r.getAuthor().getId() == id).collect(Collectors.toList());</span>
+	}
+	
+	public Reimbursement findById(int i) {
+<span class="fc" id="L34">		return rd.findById(i);</span>
+	}
+	
+	public int request(Reimbursement reimbursement) {
+<span class="nc" id="L38">		return rd.create(reimbursement);</span>
+	}
+	
+	public int updateRequest(Reimbursement reimbursement) {
+<span class="fc" id="L42">		return rd.update(reimbursement);</span>
+	}
+	
+	public List&lt;Reimbursement&gt; findAllByUser(int i){
+<span class="fc" id="L46">		return rd.findAllByUser(i);</span>
+	}
+	
+	public int delete(int i) {
+<span class="nc" id="L50">		return rd.delete(i);</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

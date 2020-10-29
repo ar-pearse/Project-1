@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReimbursementDao.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AmatuerPhotoshop</a> &gt; <a href="index.source.html" class="el_package">com.photoshop.repo</a> &gt; <span class="el_source">ReimbursementDao.java</span></div><h1>ReimbursementDao.java</h1><pre class="source lang-java linenums">package com.photoshop.repo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import com.photoshop.model.Reimbursement;
+import com.photoshop.model.ReimbursementStatus;
+import com.photoshop.model.ReimbursementType;
+import com.photoshop.util.ConnectionUtil;
+
+public class ReimbursementDao implements DaoContract&lt;Reimbursement, Integer&gt; {
+
+	private UserDao ud;
+<span class="fc" id="L21">	private static Logger logger = Logger.getLogger(ReimbursementDao.class);</span>
+	
+	public ReimbursementDao() {
+<span class="fc" id="L24">		this(new UserDao());</span>
+<span class="fc" id="L25">	}</span>
+	
+<span class="fc" id="L27">	public ReimbursementDao(UserDao ud) {</span>
+<span class="fc" id="L28">		this.ud = ud;</span>
+<span class="fc" id="L29">	}</span>
+	
+	@Override
+	public List&lt;Reimbursement&gt; findAll() {
+<span class="fc" id="L33">		List&lt;Reimbursement&gt; reimbursements = new LinkedList&lt;&gt;();</span>
+<span class="fc" id="L34">		String sql = &quot;select * from get_all_reimbursements&quot;;</span>
+		
+<span class="fc" id="L36">		try (Connection conn = ConnectionUtil.getInstance().getConnection() ){</span>
+<span class="fc" id="L37">			PreparedStatement ps = conn.prepareStatement(sql);</span>
+<span class="fc" id="L38">			ResultSet rs = ps.executeQuery();</span>
+			
+<span class="fc bfc" id="L40" title="All 2 branches covered.">			while(rs.next()) {</span>
+<span class="fc" id="L41">				reimbursements.add(new Reimbursement(rs.getInt(&quot;id&quot;), rs.getFloat(&quot;amount&quot;), rs.getTimestamp(&quot;submitted&quot;), rs.getTimestamp(&quot;resolved&quot;), rs.getString(&quot;description&quot;), </span>
+<span class="fc" id="L42">										ud.findById(rs.getInt(&quot;author&quot;)), ud.findById(rs.getInt(&quot;resolver&quot;)), </span>
+<span class="fc" id="L43">										new ReimbursementStatus(rs.getInt(&quot;status_id&quot;), rs.getString(&quot;status&quot;)), </span>
+<span class="fc" id="L44">										new ReimbursementType(rs.getInt(&quot;type_id&quot;), rs.getString(&quot;type&quot;))));</span>
+			}
+			
+<span class="fc" id="L47">			logger.info(&quot;Found all reimbursements&quot;);</span>
+			
+<span class="nc" id="L49">		} catch (SQLException e) {</span>
+<span class="nc" id="L50">			logger.warn(&quot;Error finding reimbursements: &quot;, e);</span>
+<span class="fc" id="L51">		}</span>
+		
+<span class="fc" id="L53">		return reimbursements;</span>
+	}
+
+	@Override
+	public Reimbursement findById(Integer i) {
+<span class="fc" id="L58">		Reimbursement reimbursement = null;</span>
+<span class="fc" id="L59">		String sql = &quot;select * from get_all_reimbursements where id = ?&quot;;</span>
+		
+<span class="fc" id="L61">		try (Connection conn = ConnectionUtil.getInstance().getConnection()) {</span>
+<span class="fc" id="L62">			PreparedStatement ps = conn.prepareStatement(sql);</span>
+<span class="fc" id="L63">			ps.setInt(1, i);</span>
+<span class="fc" id="L64">			ResultSet rs = ps.executeQuery();</span>
+			
+<span class="fc bfc" id="L66" title="All 2 branches covered.">			while(rs.next()) {</span>
+<span class="fc" id="L67">				reimbursement = new Reimbursement(rs.getInt(&quot;id&quot;), rs.getFloat(&quot;amount&quot;), rs.getTimestamp(&quot;submitted&quot;), rs.getTimestamp(&quot;resolved&quot;), rs.getString(&quot;description&quot;), </span>
+<span class="fc" id="L68">									ud.findById(rs.getInt(&quot;author&quot;)), ud.findById(rs.getInt(&quot;resolver&quot;)), </span>
+<span class="fc" id="L69">									new ReimbursementStatus(rs.getInt(&quot;status_id&quot;), rs.getString(&quot;status&quot;)), </span>
+<span class="fc" id="L70">									new ReimbursementType(rs.getInt(&quot;type_id&quot;), rs.getString(&quot;type&quot;)));</span>
+			}
+			
+<span class="fc" id="L73">			logger.info(&quot;Found reimbursement with id: &quot; + i);</span>
+			
+<span class="fc" id="L75">			ps.close();</span>
+<span class="fc" id="L76">			rs.close();</span>
+<span class="nc" id="L77">		} catch (SQLException e) {</span>
+<span class="nc" id="L78">			logger.warn(&quot;Error finding reimbursement by id: &quot;, e);</span>
+<span class="fc" id="L79">		}</span>
+		
+<span class="fc" id="L81">		return reimbursement;</span>
+	}
+
+	@Override
+	public int create(Reimbursement t) {
+<span class="nc" id="L86">		String sql = &quot;insert into ers_reimbursement (reimb_amount, reimb_submitted, reimb_resolved, &quot;</span>
+				+ &quot;reimb_description, reimb_author, reimb_status_id, reimb_type_id) values (?,?,?,?,?,?,?)&quot;; 
+<span class="nc" id="L88">		int updated = 0;</span>
+<span class="nc" id="L89">		try (Connection conn = ConnectionUtil.getInstance().getConnection()){</span>
+<span class="nc" id="L90">			PreparedStatement ps = conn.prepareStatement(sql);</span>
+<span class="nc" id="L91">			ps.setFloat(1, t.getAmount());</span>
+<span class="nc" id="L92">			ps.setTimestamp(2, Timestamp.valueOf(t.getDateSubmitted()));</span>
+			
+<span class="nc bnc" id="L94" title="All 2 branches missed.">			if (t.getDateResolved() != null)</span>
+<span class="nc" id="L95">				ps.setTimestamp(3, Timestamp.valueOf(t.getDateResolved()));</span>
+			else
+<span class="nc" id="L97">				ps.setTimestamp(3, null);</span>
+			
+<span class="nc" id="L99">			ps.setString(4, t.getDescription());</span>
+<span class="nc" id="L100">			ps.setInt(5, t.getAuthor().getId());</span>
+<span class="nc" id="L101">			ps.setInt(6, t.getStatus().getId());</span>
+<span class="nc" id="L102">			ps.setInt(7, t.getType().getId());</span>
+			
+<span class="nc" id="L104">			updated = ps.executeUpdate();</span>
+			
+<span class="nc" id="L106">			logger.info(&quot;Created reimbursement: &quot; + t);</span>
+			
+<span class="nc" id="L108">			ps.close();</span>
+<span class="nc" id="L109">		} catch (SQLException e) {</span>
+<span class="nc" id="L110">			logger.warn(&quot;Error creating reimbursement: &quot;, e);</span>
+<span class="nc" id="L111">		}</span>
+		
+<span class="nc" id="L113">		return updated;</span>
+	}
+
+	@Override
+	public int update(Reimbursement t) {
+<span class="fc" id="L118">		String sql = &quot;update ers_reimbursement set reimb_amount = ?, &quot;</span>
+												+ &quot;reimb_submitted = ?, &quot;
+												+ &quot;reimb_resolved = ?, &quot;
+												+ &quot;reimb_description = ?,&quot;
+												+ &quot;reimb_author = ?, &quot;
+												+ &quot;reimb_resolver = ?, &quot;
+												+ &quot;reimb_status_id = ?, &quot;
+												+ &quot;reimb_type_id = ? &quot;
+											 + &quot;where reimb_id = ?&quot;;
+<span class="fc" id="L127">		int updated = 0;</span>
+<span class="fc" id="L128">		try (Connection conn = ConnectionUtil.getInstance().getConnection()){</span>
+<span class="fc" id="L129">			PreparedStatement ps = conn.prepareStatement(sql);</span>
+<span class="fc" id="L130">			ps.setFloat(1, t.getAmount());</span>
+<span class="fc" id="L131">			ps.setTimestamp(2, Timestamp.valueOf(t.getDateSubmitted()));</span>
+			
+<span class="fc bfc" id="L133" title="All 2 branches covered.">			if (t.getDateResolved() != null)</span>
+<span class="fc" id="L134">				ps.setTimestamp(3, Timestamp.valueOf(t.getDateResolved()));</span>
+			else
+<span class="fc" id="L136">				ps.setTimestamp(3, null);</span>
+			
+<span class="fc" id="L138">			ps.setString(4, t.getDescription());</span>
+<span class="fc" id="L139">			ps.setInt(5, t.getAuthor().getId());</span>
+<span class="fc" id="L140">			ps.setInt(6, t.getResolver().getId());</span>
+<span class="fc" id="L141">			ps.setInt(7, t.getStatus().getId());</span>
+<span class="fc" id="L142">			ps.setInt(8, t.getType().getId());</span>
+<span class="fc" id="L143">			ps.setInt(9, t.getId());</span>
+			
+<span class="fc" id="L145">			updated = ps.executeUpdate();</span>
+		
+<span class="fc" id="L147">			logger.info(&quot;Updated reimbursement information: &quot; + t);</span>
+			
+<span class="fc" id="L149">			ps.close();</span>
+<span class="nc" id="L150">		} catch (SQLException e) {</span>
+<span class="nc" id="L151">			logger.warn(&quot;Error updating reimbursement: &quot;, e);</span>
+<span class="fc" id="L152">		}</span>
+		
+<span class="fc" id="L154">		return updated;</span>
+	}
+
+	public List&lt;Reimbursement&gt; findAllByUser(int i) {
+<span class="fc" id="L158">		List&lt;Reimbursement&gt; reimbursements = new LinkedList&lt;&gt;();</span>
+<span class="fc" id="L159">		String sql = &quot;select * from get_all_reimbursements where author = ?&quot;;</span>
+		
+<span class="fc" id="L161">		try (Connection conn = ConnectionUtil.getInstance().getConnection() ){</span>
+<span class="fc" id="L162">			PreparedStatement ps = conn.prepareStatement(sql);</span>
+<span class="fc" id="L163">			ps.setInt(1, i);</span>
+<span class="fc" id="L164">			ResultSet rs = ps.executeQuery();</span>
+			
+<span class="fc bfc" id="L166" title="All 2 branches covered.">			while(rs.next()) {</span>
+<span class="fc" id="L167">				reimbursements.add(new Reimbursement(rs.getInt(&quot;id&quot;), rs.getFloat(&quot;amount&quot;), rs.getTimestamp(&quot;submitted&quot;), rs.getTimestamp(&quot;resolved&quot;), rs.getString(&quot;description&quot;), </span>
+<span class="fc" id="L168">										ud.findById(rs.getInt(&quot;author&quot;)), ud.findById(rs.getInt(&quot;resolver&quot;)), </span>
+<span class="fc" id="L169">										new ReimbursementStatus(rs.getInt(&quot;status_id&quot;), rs.getString(&quot;status&quot;)), </span>
+<span class="fc" id="L170">										new ReimbursementType(rs.getInt(&quot;type_id&quot;), rs.getString(&quot;type&quot;))));</span>
+			}
+			
+<span class="fc" id="L173">			logger.info(&quot;Found all reimbursements by user id: &quot; + i);</span>
+			
+<span class="fc" id="L175">			ps.close();</span>
+<span class="fc" id="L176">			rs.close();</span>
+<span class="nc" id="L177">		} catch (SQLException e) {</span>
+<span class="nc" id="L178">			logger.warn(&quot;Error finding reimbursements by user: &quot;, e);</span>
+<span class="fc" id="L179">		}</span>
+		
+<span class="fc" id="L181">		reimbursements.sort( (r1, r2) -&gt; r1.getStatus().getStatus().compareTo(r2.getStatus().getStatus()) );</span>
+		
+<span class="fc" id="L183">		return reimbursements;</span>
+	}
+
+	@Override
+	public int delete(Integer i) {
+<span class="nc" id="L188">		int updated = 0;</span>
+		
+<span class="nc" id="L190">		try(Connection conn = ConnectionUtil.getInstance().getConnection()){</span>
+<span class="nc" id="L191">			String sql = &quot;delete from ers_reimbursement where reimb_id = ?&quot;;</span>
+<span class="nc" id="L192">			PreparedStatement ps = conn.prepareStatement(sql);</span>
+<span class="nc" id="L193">			ps.setInt(1, i);</span>
+			
+<span class="nc" id="L195">			updated = ps.executeUpdate();</span>
+<span class="nc" id="L196">			logger.info(&quot;Deleted reimbursement with id: &quot; + i);</span>
+			
+<span class="nc" id="L198">			ps.close();</span>
+<span class="nc" id="L199">		} catch (SQLException e) {</span>
+<span class="nc" id="L200">			logger.warn(&quot;Error deleting reimbursement: &quot;, e);</span>
+<span class="nc" id="L201">		}</span>
+		
+		
+<span class="nc" id="L204">		return updated;</span>
+	}
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

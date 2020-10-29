@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RequestForwarder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AmatuerPhotoshop</a> &gt; <a href="index.source.html" class="el_package">com.photoshop.servlet</a> &gt; <span class="el_source">RequestForwarder.java</span></div><h1>RequestForwarder.java</h1><pre class="source lang-java linenums">package com.photoshop.servlet;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+
+import com.photoshop.controller.ReimbursementController;
+import com.photoshop.controller.UserController;
+
+public class RequestForwarder {
+
+	private UserController uc;
+	private ReimbursementController rc;
+	
+<span class="nc" id="L16">	private static Logger logger = Logger.getLogger(RequestForwarder.class);</span>
+
+	
+	public RequestForwarder() {
+<span class="nc" id="L20">		this(new UserController(), new ReimbursementController());</span>
+<span class="nc" id="L21">	}</span>
+	
+<span class="nc" id="L23">	public RequestForwarder(UserController uc, ReimbursementController rc) {</span>
+<span class="nc" id="L24">		this.uc = uc;</span>
+<span class="nc" id="L25">		this.rc = rc;</span>
+<span class="nc" id="L26">	}</span>
+	
+	public String routes(HttpServletRequest req) {
+<span class="nc bnc" id="L29" title="All 6 branches missed.">		switch(req.getRequestURI()) {</span>
+		case &quot;/AmatuerPhotoshop/login.page&quot;:
+<span class="nc" id="L31">			logger.info(&quot;Routed to employee.html&quot;);</span>
+<span class="nc" id="L32">			return uc.verifyUser(req);</span>
+		case &quot;/AmatuerPhotoshop/employee.page&quot;:
+<span class="nc" id="L34">			logger.info(&quot;Routed to employee.html&quot;);</span>
+<span class="nc" id="L35">			return &quot;html/employee.html&quot;;</span>
+		case &quot;/AmatuerPhotoshop/finance.page&quot;:
+<span class="nc" id="L37">			logger.info(&quot;Routed to finance manager.html&quot;);</span>
+<span class="nc" id="L38">			return &quot;html/finance manager.html&quot;;</span>
+		case &quot;/AmatuerPhotoshop/request.page&quot;:
+<span class="nc" id="L40">			logger.info(&quot;Routed to new request.html&quot;);</span>
+<span class="nc" id="L41">			return &quot;html/new request.html&quot;;</span>
+		case &quot;/AmatuerPhotoshop/create.page&quot;:
+<span class="nc" id="L43">			logger.info(&quot;Routed to employee.html&quot;);</span>
+<span class="nc" id="L44">			return &quot;html/employee.html&quot;;</span>
+		default:
+<span class="nc" id="L46">			logger.info(&quot;Routed to frontpage.html&quot;);</span>
+<span class="nc" id="L47">			return &quot;html/frontpage.html&quot;;</span>
+		}
+	}
+	
+	public void data(HttpServletRequest req, HttpServletResponse res) {
+<span class="nc bnc" id="L52" title="All 9 branches missed.">		switch(req.getRequestURI()) {</span>
+		case &quot;/AmatuerPhotoshop/allUserReimbursements.json&quot;:
+<span class="nc" id="L54">			rc.sendUserReimbursementRequests(req, res);</span>
+<span class="nc" id="L55">			logger.info(&quot;Routed to allUserReimbursements.json&quot;);</span>
+<span class="nc" id="L56">			break;</span>
+		case &quot;/AmatuerPhotoshop/reimb.json&quot;:
+<span class="nc" id="L58">			rc.createNewReimbursement(req);</span>
+<span class="nc" id="L59">			logger.info(&quot;Routed to reimb.json&quot;);</span>
+<span class="nc" id="L60">			break;</span>
+		case &quot;/AmatuerPhotoshop/cancel.json&quot;:
+<span class="nc" id="L62">			rc.cancelReimbursement(req);</span>
+<span class="nc" id="L63">			logger.info(&quot;Routed to cancel.json&quot;);</span>
+<span class="nc" id="L64">			break;</span>
+		case &quot;/AmatuerPhotoshop/allReimbursements.json&quot;:
+<span class="nc" id="L66">			rc.sendAllPendingReimbursements(res);</span>
+<span class="nc" id="L67">			logger.info(&quot;Routed to allReimbursements.json&quot;);</span>
+<span class="nc" id="L68">			break;</span>
+		case &quot;/AmatuerPhotoshop/reject.json&quot;:
+<span class="nc" id="L70">			rc.rejectReimbursement(req, res);</span>
+<span class="nc" id="L71">			logger.info(&quot;Routed to reject.json&quot;);</span>
+<span class="nc" id="L72">			break;</span>
+		case &quot;/AmatuerPhotoshop/accept.json&quot;:
+<span class="nc" id="L74">			rc.acceptReimbursement(req, res);</span>
+<span class="nc" id="L75">			logger.info(&quot;Routed to accept.json&quot;);</span>
+<span class="nc" id="L76">			break;</span>
+		case &quot;/AmatuerPhotoshop/user.json&quot;:
+<span class="nc" id="L78">			uc.getEmployeeList(res);</span>
+<span class="nc" id="L79">			logger.info(&quot;Routed to user.json&quot;);</span>
+<span class="nc" id="L80">			break;</span>
+		case &quot;/AmatuerPhotoshop/sorted.json&quot;:
+<span class="nc" id="L82">			logger.info(&quot;Routed to sorted.json&quot;);</span>
+<span class="nc" id="L83">			rc.sortByEmployee(req, res);</span>
+		}
+<span class="nc" id="L85">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>
