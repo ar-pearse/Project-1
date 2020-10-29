@@ -9,6 +9,8 @@ import java.sql.Types;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 //import org.apache.log4j.Logger;
 
 import com.photoshop.model.User;
@@ -17,7 +19,7 @@ import com.photoshop.util.ConnectionUtil;
 
 public class UserDao implements DaoContract<User, Integer> {
 
-//	private static Logger logger = Logger.getLogger(UserDao.class);
+	private static Logger logger = Logger.getLogger(UserDao.class);
 	
 	@Override
 	public List<User> findAll() {
@@ -33,9 +35,11 @@ public class UserDao implements DaoContract<User, Integer> {
 										rs.getString("last_name"), rs.getString("email"), new UserRole(rs.getInt("role_id"), rs.getString("role"))));
 			}
 			
-			
+			logger.info("Found all users: " + users);
+			ps.close();
+			rs.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.warn("Error finding users: ", e);
 		}
 		
 		return users;
@@ -56,10 +60,12 @@ public class UserDao implements DaoContract<User, Integer> {
 									rs.getString("last_name"), rs.getString("email"), new UserRole(rs.getInt("role_id"), rs.getString("role")));
 			}
 			
+			logger.info("Found user by id: " + user);
+			
 			ps.close();
 			rs.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.warn("Error finding user by id: ", e);
 		}
 		
 		return user;
@@ -81,9 +87,11 @@ public class UserDao implements DaoContract<User, Integer> {
 			
 			updated = ps.executeUpdate();
 			
+			logger.info("User created: " + t);
+			
 			ps.close();
 		} catch (SQLException e) {
-		e.printStackTrace();
+			logger.warn("Error creating user: ", e);
 		}
 		
 		return updated;
@@ -111,9 +119,11 @@ public class UserDao implements DaoContract<User, Integer> {
 			
 			updated = ps.executeUpdate();
 			
+			logger.info("User updated: " + t);
+			
 			ps.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.warn("Error updating user: ", e);
 		}
 
 		return updated;
@@ -133,12 +143,14 @@ public class UserDao implements DaoContract<User, Integer> {
 			boolean verified = ps.getBoolean(1);
 			ps.close();
 			
+			logger.info("Verified user info: " + email + " " + password);
 			return verified;
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.warn("Error verifying user: ", e);
 		}
 		
+		logger.info("Invalid credentials: " + email + " " + password);
 		return false;
 	}
 	
@@ -157,9 +169,10 @@ public class UserDao implements DaoContract<User, Integer> {
 			}
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.warn("Error finding user email: ", e);
 		}
 		
+		logger.info("Found user by email: " + user);
 		return user;
 	}
 
